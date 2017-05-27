@@ -243,6 +243,15 @@ impl Response {
         }
     }
 
+    pub fn mime_type(&self) -> &'static str {
+        match *self {
+            Response::Pack(_) | Response::Continue(_)
+                => "application/x-git-upload-pack-result",
+            Response::Error(_)
+                => "text/plain; charset=utf-8",
+        }
+    }
+
     pub fn write_to(&mut self, mut writer: &mut io::Write) -> Result<()> {
         match *self {
             Response::Pack(ref mut pack) => pack.write_to(writer)?,
